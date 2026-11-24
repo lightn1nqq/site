@@ -36,6 +36,8 @@ interface CatRuntime {
   timer: number;
   petUntil: number;
   lastStrokeAt: number;
+  lastPointerX: number;
+  lastPointerY: number;
 }
 
 interface CatUiState {
@@ -115,6 +117,8 @@ export function RoamingCats() {
         timer: 3200 + Math.random() * 4200,
         petUntil: 0,
         lastStrokeAt: 0,
+        lastPointerX: -1,
+        lastPointerY: -1,
       };
       const node = elRefs.current[c.id];
       if (node) {
@@ -228,12 +232,26 @@ export function RoamingCats() {
             }}
             type="button"
             className={`roaming-cat roaming-cat--${cat.variant} is-${st.mode}`}
-            onClick={() => petCat(cat.id, false)}
+            onPointerEnter={(e) => {
+              const rt = runtimeRef.current[cat.id];
+              if (rt) {
+                rt.lastPointerX = e.clientX;
+                rt.lastPointerY = e.clientY;
+              }
+              petCat(cat.id, true);
+            }}
             onPointerMove={(e) => {
-              if (e.pointerType === 'mouse' && (e.movementX !== 0 || e.movementY !== 0)) {
+              const rt = runtimeRef.current[cat.id];
+              if (!rt) return;
+              const dx = rt.lastPointerX >= 0 ? e.clientX - rt.lastPointerX : 0;
+              const dy = rt.lastPointerY >= 0 ? e.clientY - rt.lastPointerY : 0;
+              if (Math.hypot(dx, dy) >= 12) {
+                rt.lastPointerX = e.clientX;
+                rt.lastPointerY = e.clientY;
                 petCat(cat.id, true);
               }
             }}
+            onClick={() => petCat(cat.id, false)}
             aria-label={`Погладить котика ${cat.name}${
               st.petCount > 0 ? ` (поглажено: ${st.petCount})` : ''
             }`}
