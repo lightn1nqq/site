@@ -207,7 +207,7 @@ export const PORTFOLIO_DATA: PortfolioData = {
         { keys: 'Ctrl + V', action: 'Вставить картинку из буфера' },
         { keys: 'F1', action: 'Памятка клавиш и режима 1:1' },
       ],
-      repoUrl: 'https://github.com/lightn1nqq',
+      repoUrl: 'https://github.com/lightn1nqq/Aether-Bot',
       featured: true,
     },
   ],
