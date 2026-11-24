@@ -375,6 +375,67 @@ class SoundEngine {
     });
   }
 
+  /** Мягкое синтезированное мурчание при поглаживании котика */
+  public playPurr(): void {
+    if (!this.enabled) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const t = ctx.currentTime;
+    const duration = 0.44;
+
+    // Warm low-frequency purr carrier (108 Hz + soft second harmonic)
+    const carrier = ctx.createOscillator();
+    const overtone = ctx.createOscillator();
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+    const masterGain = ctx.createGain();
+
+    carrier.type = 'triangle';
+    carrier.frequency.setValueAtTime(104, t);
+    carrier.frequency.linearRampToValueAtTime(114, t + duration * 0.55);
+    carrier.frequency.linearRampToValueAtTime(98, t + duration);
+
+    overtone.type = 'sine';
+    overtone.frequency.setValueAtTime(208, t);
+    overtone.frequency.linearRampToValueAtTime(196, t + duration);
+
+    // ~25 Hz amplitude modulation gives authentic gentle cat purr cadence
+    lfo.type = 'sine';
+    lfo.frequency.setValueAtTime(25, t);
+    lfoGain.gain.setValueAtTime(0.014, t);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(340, t);
+    filter.Q.setValueAtTime(1.4, t);
+
+    masterGain.gain.setValueAtTime(0.0001, t);
+    masterGain.gain.linearRampToValueAtTime(0.032, t + 0.08);
+    masterGain.gain.setValueAtTime(0.03, t + duration * 0.65);
+    masterGain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+
+    const overtoneGain = ctx.createGain();
+    overtoneGain.gain.setValueAtTime(0.32, t);
+
+    lfo.connect(lfoGain);
+    lfoGain.connect(masterGain.gain);
+
+    carrier.connect(filter);
+    overtone.connect(overtoneGain);
+    overtoneGain.connect(filter);
+    filter.connect(masterGain);
+    masterGain.connect(ctx.destination);
+
+    carrier.start(t);
+    overtone.start(t);
+    lfo.start(t);
+
+    carrier.stop(t + duration + 0.02);
+    overtone.stop(t + duration + 0.02);
+    lfo.stop(t + duration + 0.02);
+  }
+
   /** Тумблер звука (вкл / выкл) */
   private playToggle(on: boolean): void {
     const ctx = this.getContext();

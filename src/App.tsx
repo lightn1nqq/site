@@ -25,17 +25,25 @@ import { EditorDrawer } from './components/EditorDrawer';
 import { MobileNavDialog } from './components/MobileNavDialog';
 import { RevealText } from './components/RevealText';
 import { SlidingTabs, type SlidingTabItem } from './components/SlidingTabs';
-import { AnimatedCopyIcon, AnimatedSoundIcon } from './components/AnimatedCopyIcon';
+import {
+  AnimatedCopyIcon,
+  AnimatedSoundIcon,
+  AnimatedThemeIcon,
+} from './components/AnimatedCopyIcon';
 import {
   AtmospherePopover,
   type GlassDensity,
   type ScrollBlurMode,
+  type ThemePreference,
 } from './components/AtmospherePopover';
 import { ScrollRail } from './components/ScrollRail';
+import { RoamingCats } from './components/RoamingCats';
 
 const ALL_CATEGORY = 'Все';
+const STORAGE_SCHEME_KEY = 'color-scheme';
 const STORAGE_BLUR_KEY = 'portfolio_scroll_blur_mode';
 const STORAGE_GLASS_KEY = 'portfolio_glass_density';
+const STORAGE_CATS_KEY = 'portfolio_cats_enabled';
 
 const APPROACH_PRINCIPLES = [
   {
@@ -46,7 +54,7 @@ const APPROACH_PRINCIPLES = [
   {
     index: '02',
     title: 'Оптическая глубина',
-    text: 'Слои тёмного дымчатого стекла и тончайшие кромки света создают иерархию без визуального шума и лишних рамок.',
+    text: 'Слои жидкого стекла и тончайшие световые кромки формируют иерархию одинаково чисто в тёмной и светлой теме.',
   },
   {
     index: '03',
@@ -54,6 +62,35 @@ const APPROACH_PRINCIPLES = [
     text: 'Движение следует за жестом и скоростью скролла: переходы на GPU, выверенное замедление и едва заметный звук.',
   },
 ];
+
+function readStoredTheme(): ThemePreference {
+  if (typeof window === 'undefined') return 'system';
+  try {
+    const saved = window.localStorage.getItem(STORAGE_SCHEME_KEY);
+    if (saved === 'light' || saved === 'dark') return saved;
+  } catch {
+    // ignore
+  }
+  return 'system';
+}
+
+function getSystemPrefersLight(): boolean {
+  if (typeof window === 'undefined') return false;
+  return Boolean(window.matchMedia?.('(prefers-color-scheme: light)').matches);
+}
+
+function applyThemeToDocument(pref: ThemePreference): void {
+  if (typeof document === 'undefined') return;
+  const meta = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]');
+  if (meta) {
+    meta.content = pref === 'system' ? 'light dark' : pref;
+  }
+  if (pref === 'system') {
+    delete document.documentElement.dataset.theme;
+  } else {
+    document.documentElement.dataset.theme = pref;
+  }
+}
 
 export function App() {
   const [data, setData] = useState<PortfolioData>(() => loadPortfolioData());
@@ -65,6 +102,21 @@ export function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(() => sound.isEnabled());
   const [soundProfile, setSoundProfile] = useState<SoundProfile>(() => sound.getProfile());
+
+  const [themePreference, setThemePreference] = useState<ThemePreference>(() => readStoredTheme());
+  const [systemIsLight, setSystemIsLight] = useState<boolean>(() => getSystemPrefersLight());
+
+  const [catsEnabled, setCatsEnabled] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    try {
+      const saved = window.localStorage.getItem(STORAGE_CATS_KEY);
+      if (saved !== null) return saved === 'true';
+    } catch {
+      // ignore
+    }
+    return true;
+  });
+
   const [scrollBlur, setScrollBlur] = useState<ScrollBlurMode>(() => {
     if (typeof window === 'undefined') return 'deep';
     try {
@@ -75,6 +127,7 @@ export function App() {
     }
     return 'deep';
   });
+
   const [glassDensity, setGlassDensity] = useState<GlassDensity>(() => {
     if (typeof window === 'undefined') return 'liquid';
     try {
@@ -91,6 +144,9 @@ export function App() {
   const [toastVisible, setToastVisible] = useState<boolean>(false);
   const toastTimerRef = useRef<number | null>(null);
 
+  const isLightResolved =
+    themePreference === 'light' || (themePreference === 'system' && systemIsLight);
+
   const showToast = useCallback((message: string) => {
     setToastText(message);
     setToastVisible(true);
@@ -102,7 +158,91 @@ export function App() {
     }, 2200);
   }, []);
 
-  // Sync Liquid Glass optical presets on document root
+  // Sync <meta name="color-scheme"> and cross-tab storage/system changes
+  useEffect(() => {
+    applyThemeToDocument(themePreference);
+  }, [themePreference]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(prefers-color-scheme: light)');
+    const onSystemChange = (e: MediaQueryListEvent) => {
+      setSystemIsLight(e.matches);
+    };
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === STORAGE_SCHEME_KEY) {
+        setThemePreference(readStoredTheme());
+      }
+    };
+    mq.addEventListener('change', onSystemChange);
+    window.addEventListener('storage', onStorage);
+    return () => {
+      mq.removeEventListener('change', onSystemChange);
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
+
+  const handleSetThemePreference = useCallback(
+    (next: ThemePreference) => {
+      setThemePreference(next);
+      try {
+        if (next === 'system') {
+          window.localStorage.removeItem(STORAGE_SCHEME_KEY);
+        } else {
+          window.localStorage.setItem(STORAGE_SCHEME_KEY, next);
+        }
+      } catch {
+        // ignore storage errors while still applying theme
+      }
+      showToast(
+        next === 'light'
+          ? 'Светлая тема Liquid Glass'
+          : next === 'dark'
+            ? 'Тёмная тема Liquid Glass'
+            : 'Тема как в системе',
+      );
+    },
+    [showToast],
+  );
+
+  // Two-state quick toggle in header: switches to opposite of currently rendered scheme,
+  // reverting to system default (removing localStorage override) when matching OS preference.
+  const handleQuickToggleTheme = useCallback(() => {
+    sound.playTab();
+    const target: 'light' | 'dark' = isLightResolved ? 'dark' : 'light';
+    const systemScheme: 'light' | 'dark' = getSystemPrefersLight() ? 'light' : 'dark';
+    const nextPref: ThemePreference = target === systemScheme ? 'system' : target;
+    setThemePreference(nextPref);
+    try {
+      if (nextPref === 'system') {
+        window.localStorage.removeItem(STORAGE_SCHEME_KEY);
+      } else {
+        window.localStorage.setItem(STORAGE_SCHEME_KEY, nextPref);
+      }
+    } catch {
+      // ignore
+    }
+    showToast(target === 'light' ? 'Светлая тема Liquid Glass' : 'Тёмная тема Liquid Glass');
+  }, [isLightResolved, showToast]);
+
+  const handleSetCatsEnabled = useCallback(
+    (next: boolean) => {
+      setCatsEnabled(next);
+      try {
+        window.localStorage.setItem(STORAGE_CATS_KEY, String(next));
+      } catch {
+        // ignore
+      }
+      showToast(next ? 'Котики вышли на прогулку' : 'Котики скрыты');
+    },
+    [showToast],
+  );
+
+  const handleToggleCats = useCallback(() => {
+    sound.playTab();
+    handleSetCatsEnabled(!catsEnabled);
+  }, [catsEnabled, handleSetCatsEnabled]);
+
   useEffect(() => {
     document.documentElement.dataset.scrollBlur = scrollBlur;
     try {
@@ -125,10 +265,8 @@ export function App() {
     document.title = `${data.profile.name} — Проекты и контакты`;
   }, [data.profile.name]);
 
-  // Specular pointer reflection on Liquid Glass surfaces
   useGlassSpecular();
 
-  // Open deep-linked project hash on initial load
   useEffect(() => {
     const hash = window.location.hash;
     if (hash.startsWith('#project-')) {
@@ -160,7 +298,6 @@ export function App() {
     return data.projects.filter((p) => p.category === selectedCategory);
   }, [data.projects, selectedCategory]);
 
-  // Graceful fallback for bidirectional scroll blur when native view() timeline is unsupported
   useScrollFocusFallback(scrollBlur, [filteredProjects.length, selectedCategory]);
 
   useEffect(() => {
@@ -307,10 +444,28 @@ export function App() {
           </nav>
 
           <div className="header-actions">
+            <button
+              type="button"
+              className="icon-control glass-control theme-quick-btn"
+              onClick={handleQuickToggleTheme}
+              onMouseEnter={() => sound.playHover()}
+              aria-label={isLightResolved ? 'Переключить на тёмную тему' : 'Переключить на светлую тему'}
+              title={isLightResolved ? 'Включить тёмную тему' : 'Включить светлую тему'}
+            >
+              <AnimatedThemeIcon isLight={isLightResolved} size={15} />
+              <span key={isLightResolved ? 'light' : 'dark'} className="micro-swap-text theme-quick-label">
+                {isLightResolved ? 'Светлая' : 'Тёмная'}
+              </span>
+            </button>
+
             <AtmospherePopover
+              themePreference={themePreference}
+              catsEnabled={catsEnabled}
               scrollBlur={scrollBlur}
               glassDensity={glassDensity}
               soundProfile={soundProfile}
+              onChangeTheme={handleSetThemePreference}
+              onChangeCatsEnabled={handleSetCatsEnabled}
               onChangeScrollBlur={setScrollBlur}
               onChangeGlassDensity={setGlassDensity}
               onChangeSoundProfile={handleChangeSoundProfile}
@@ -326,7 +481,7 @@ export function App() {
               title={soundEnabled ? 'Звук включён' : 'Звук выключен'}
             >
               <AnimatedSoundIcon enabled={soundEnabled} size={16} />
-              <span key={soundEnabled ? 'on' : 'off'} className="micro-swap-text">
+              <span key={soundEnabled ? 'on' : 'off'} className="micro-swap-text sound-btn-label">
                 {soundEnabled ? 'Звук' : 'Тихо'}
               </span>
               <span className="sound-dot" aria-hidden="true" />
@@ -812,6 +967,8 @@ export function App() {
         </div>
       </footer>
 
+      {catsEnabled && <RoamingCats />}
+
       <ProjectModal
         project={activeProject}
         projectIndex={activeProjectIndex}
@@ -835,10 +992,14 @@ export function App() {
 
       <MobileNavDialog
         open={mobileMenuOpen}
+        isLightTheme={isLightResolved}
         soundEnabled={soundEnabled}
+        catsEnabled={catsEnabled}
         socials={socials}
         onClose={() => setMobileMenuOpen(false)}
+        onToggleTheme={handleQuickToggleTheme}
         onToggleSound={handleToggleSound}
+        onToggleCats={handleToggleCats}
         onOpenEditor={() => setEditorOpen(true)}
         onCopySocial={(s) => handleCopy(s.copyValue, `mobile-${s.id}`, s.label)}
       />

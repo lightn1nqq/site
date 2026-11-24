@@ -1,27 +1,35 @@
 import { useEffect, useRef } from 'react';
-import { ArrowUpRight, SlidersHorizontal, X } from 'lucide-react';
+import { ArrowUpRight, Cat, SlidersHorizontal, X } from 'lucide-react';
 import type { SocialLink } from '../data/portfolio';
 import { attachDialogBehaviors, closeDialogSmoothly } from '../lib/dialog';
 import { sound } from '../lib/sound';
 import { SocialIcon } from './SocialIcon';
-import { AnimatedSoundIcon } from './AnimatedCopyIcon';
+import { AnimatedSoundIcon, AnimatedThemeIcon } from './AnimatedCopyIcon';
 
 interface MobileNavDialogProps {
   open: boolean;
+  isLightTheme: boolean;
   soundEnabled: boolean;
+  catsEnabled: boolean;
   socials: SocialLink[];
   onClose: () => void;
+  onToggleTheme: () => void;
   onToggleSound: () => void;
+  onToggleCats: () => void;
   onOpenEditor: () => void;
   onCopySocial: (social: SocialLink) => void;
 }
 
 export function MobileNavDialog({
   open,
+  isLightTheme,
   soundEnabled,
+  catsEnabled,
   socials,
   onClose,
+  onToggleTheme,
   onToggleSound,
+  onToggleCats,
   onOpenEditor,
   onCopySocial,
 }: MobileNavDialogProps) {
@@ -93,7 +101,11 @@ export function MobileNavDialog({
       </div>
 
       <div className="dialog-scroll">
-        <nav key={open ? 'open' : 'closed'} className="mobile-nav-list tab-panel-anim" aria-label="Мобильная навигация">
+        <nav
+          key={open ? 'open' : 'closed'}
+          className="mobile-nav-list tab-panel-anim"
+          aria-label="Мобильная навигация"
+        >
           <a
             href="#approach"
             className="mobile-nav-item"
@@ -139,11 +151,15 @@ export function MobileNavDialog({
             <span>Редактор контента</span>
             <SlidersHorizontal size={16} strokeWidth={1.5} aria-hidden="true" />
           </button>
-          <button
-            type="button"
-            className="mobile-nav-item"
-            onClick={onToggleSound}
-          >
+          <button type="button" className="mobile-nav-item" onClick={onToggleTheme}>
+            <span>Тема ({isLightTheme ? 'светлая' : 'тёмная'})</span>
+            <AnimatedThemeIcon isLight={isLightTheme} size={16} />
+          </button>
+          <button type="button" className="mobile-nav-item" onClick={onToggleCats}>
+            <span>Котики ({catsEnabled ? 'вкл' : 'выкл'})</span>
+            <Cat size={16} strokeWidth={1.5} aria-hidden="true" />
+          </button>
+          <button type="button" className="mobile-nav-item" onClick={onToggleSound}>
             <span>Звук интерфейса ({soundEnabled ? 'вкл' : 'выкл'})</span>
             <AnimatedSoundIcon enabled={soundEnabled} size={16} />
           </button>

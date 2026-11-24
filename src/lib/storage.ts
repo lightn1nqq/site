@@ -1,6 +1,6 @@
 import { PORTFOLIO_DATA, type PortfolioData } from '../data/portfolio';
 
-const DATA_STORAGE_KEY = 'portfolio_custom_data_v5';
+const DATA_STORAGE_KEY = 'portfolio_custom_data_v6';
 
 export function loadPortfolioData(): PortfolioData {
   if (typeof window === 'undefined') return PORTFOLIO_DATA;

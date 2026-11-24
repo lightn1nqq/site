@@ -1,19 +1,35 @@
 import { useEffect, useId, useRef } from 'react';
-import { Sliders, X } from 'lucide-react';
+import { Settings2, X } from 'lucide-react';
 import { sound, type SoundProfile } from '../lib/sound';
 import { SlidingTabs, type SlidingTabItem } from './SlidingTabs';
 
+export type ThemePreference = 'dark' | 'light' | 'system';
 export type ScrollBlurMode = 'deep' | 'soft' | 'off';
 export type GlassDensity = 'liquid' | 'dense';
 
 interface AtmospherePopoverProps {
+  themePreference: ThemePreference;
+  catsEnabled: boolean;
   scrollBlur: ScrollBlurMode;
   glassDensity: GlassDensity;
   soundProfile: SoundProfile;
+  onChangeTheme: (theme: ThemePreference) => void;
+  onChangeCatsEnabled: (enabled: boolean) => void;
   onChangeScrollBlur: (mode: ScrollBlurMode) => void;
   onChangeGlassDensity: (density: GlassDensity) => void;
   onChangeSoundProfile: (profile: SoundProfile) => void;
 }
+
+const THEME_TABS: SlidingTabItem<ThemePreference>[] = [
+  { id: 'dark', label: 'Тёмная' },
+  { id: 'light', label: 'Светлая' },
+  { id: 'system', label: 'Система' },
+];
+
+const CATS_TABS: SlidingTabItem<'on' | 'off'>[] = [
+  { id: 'on', label: 'Вкл' },
+  { id: 'off', label: 'Выкл' },
+];
 
 const BLUR_TABS: SlidingTabItem<ScrollBlurMode>[] = [
   { id: 'deep', label: 'Глубокий' },
@@ -32,20 +48,23 @@ const SOUND_TABS: SlidingTabItem<SoundProfile>[] = [
 ];
 
 /**
- * Native Popover API ("popover=auto") settings panel in Dark Liquid Glass,
+ * Native Popover API ("popover=auto") Settings panel in Liquid Glass,
  * positioned via CSS Anchor Positioning (`position-area` + `position-try-fallbacks`).
- * Follows button-revealing-a-control-panel semantics (no role="menu" or aria-haspopup).
  */
 export function AtmospherePopover({
+  themePreference,
+  catsEnabled,
   scrollBlur,
   glassDensity,
   soundProfile,
+  onChangeTheme,
+  onChangeCatsEnabled,
   onChangeScrollBlur,
   onChangeGlassDensity,
   onChangeSoundProfile,
 }: AtmospherePopoverProps) {
   const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
-  const popoverId = `atmosphere-panel-${rawId}`;
+  const popoverId = `settings-panel-${rawId}`;
   const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -72,11 +91,11 @@ export function AtmospherePopover({
         className="icon-control glass-control atmosphere-trigger"
         popoverTarget={popoverId}
         onMouseEnter={() => sound.playHover()}
-        aria-label="Настройки оптики, скролла и звука"
-        title="Оптика и звук"
+        aria-label="Настройки сайта"
+        title="Настройки"
       >
-        <Sliders size={15} strokeWidth={1.5} aria-hidden="true" />
-        <span className="atmosphere-trigger-label">Оптика</span>
+        <Settings2 size={15} strokeWidth={1.5} aria-hidden="true" />
+        <span className="atmosphere-trigger-label">Настройки</span>
       </button>
 
       <div
@@ -89,22 +108,44 @@ export function AtmospherePopover({
         <div className="glass-popover-head">
           <div>
             <h2 id={`${popoverId}-title`} className="socials-card-title">
-              Оптика и отклик
+              Настройки
             </h2>
-            <p className="glass-popover-sub">Живые настройки стекла, скролла и звука</p>
+            <p className="glass-popover-sub">Тема, котики, скролл-фокус и звук</p>
           </div>
           <button
             type="button"
             className="copy-mini-btn"
             popoverTarget={popoverId}
             popoverTargetAction="hide"
-            aria-label="Закрыть панель оптики"
+            aria-label="Закрыть настройки"
           >
             <X size={15} strokeWidth={1.5} aria-hidden="true" />
           </button>
         </div>
 
         <div className="glass-popover-body">
+          <div className="atmosphere-row">
+            <span className="atmosphere-label">Тема оформления</span>
+            <SlidingTabs
+              variant="compact"
+              items={THEME_TABS}
+              activeId={themePreference}
+              onChange={onChangeTheme}
+              ariaLabel="Выбор темы оформления"
+            />
+          </div>
+
+          <div className="atmosphere-row">
+            <span className="atmosphere-label">Котики на экране</span>
+            <SlidingTabs
+              variant="compact"
+              items={CATS_TABS}
+              activeId={catsEnabled ? 'on' : 'off'}
+              onChange={(val) => onChangeCatsEnabled(val === 'on')}
+              ariaLabel="Показывать котиков на сайте"
+            />
+          </div>
+
           <div className="atmosphere-row">
             <span className="atmosphere-label">Скролл-фокус текста</span>
             <SlidingTabs
@@ -123,7 +164,7 @@ export function AtmospherePopover({
               items={GLASS_TABS}
               activeId={glassDensity}
               onChange={onChangeGlassDensity}
-              ariaLabel="Плотность тёмного стекла"
+              ariaLabel="Плотность стекла"
             />
           </div>
 

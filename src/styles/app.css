@@ -20,8 +20,8 @@
   opacity: 0;
   background: radial-gradient(
     320px circle at var(--mx, 50%) var(--my, 0%),
-    rgba(255, 255, 255, 0.068) 0%,
-    rgba(255, 255, 255, 0) 70%
+    var(--specular-glint) 0%,
+    transparent 70%
   );
   transition: opacity var(--dur-med) var(--ease);
 }
@@ -61,15 +61,11 @@
   top: 0;
   z-index: 30;
   height: var(--header-h);
-  background: linear-gradient(
-    180deg,
-    rgba(16, 16, 20, 0.78) 0%,
-    rgba(12, 12, 15, 0.64) 100%
-  );
+  background: var(--header-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border-bottom: 1px solid var(--border-hairline);
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: var(--highlight-top);
 }
 
 .header-inner {
@@ -148,7 +144,7 @@
 
 .nav-link:hover {
   color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--tint-subtle);
 }
 
 .nav-link:hover span::after {
@@ -355,12 +351,12 @@
 
 .scroll-rail-btn:hover {
   color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: var(--tint-hover);
 }
 
 .scroll-rail-btn.is-active {
   color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--tint-active);
 }
 
 .scroll-rail-dot {
@@ -441,11 +437,11 @@
 .btn--primary {
   background-color: var(--text-primary);
   color: var(--bg-page);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 8px 20px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--btn-primary-shadow);
 }
 
 .btn--primary:hover {
-  background-color: #e2e2e6;
+  background-color: var(--btn-primary-hover);
 }
 
 .btn--secondary {
@@ -468,7 +464,7 @@
 
 .btn--ghost:hover {
   color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--tint-subtle);
   border-color: var(--border-strong);
 }
 
@@ -775,7 +771,7 @@
 }
 
 .social-row:hover {
-  background-color: rgba(255, 255, 255, 0.055);
+  background-color: var(--tint-hover);
 }
 
 .social-row-link {
@@ -859,7 +855,7 @@
 
 .copy-mini-btn:hover {
   color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.07);
+  background-color: var(--tint-hover);
   border-color: var(--border-hairline);
 }
 
@@ -1015,7 +1011,7 @@
 
 .sliding-tabs--compact {
   border-radius: var(--r-sm);
-  background: rgba(10, 10, 12, 0.56);
+  background: var(--panel-inset-bg);
   padding: 4px;
 }
 
@@ -1023,7 +1019,7 @@
   display: flex;
   width: 100%;
   border-radius: var(--r-sm);
-  background: rgba(10, 10, 12, 0.56);
+  background: var(--panel-inset-bg);
 }
 
 .sliding-tabs-pill {
@@ -1032,13 +1028,9 @@
   bottom: var(--s-1);
   left: 0;
   border-radius: var(--r-sm);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.045) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 12px rgba(0, 0, 0, 0.24);
+  background: var(--glass-pill-bg);
+  border: 1px solid var(--glass-pill-border);
+  box-shadow: var(--glass-pill-shadow);
   pointer-events: none;
   opacity: 0;
   transition:
@@ -1277,7 +1269,7 @@
   height: 24px;
   padding-inline: var(--s-2);
   border-radius: var(--r-xs);
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: var(--tint-subtle);
   border: 1px solid var(--border-hairline);
   font-size: 12px;
   color: var(--text-muted);
@@ -1336,7 +1328,7 @@
 
 .project-ext-btn:hover {
   color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: var(--tint-hover);
 }
 
 /* ==========================================================================
@@ -1363,6 +1355,8 @@
    ========================================================================== */
 
 .coded-stage--aether {
+  /* Force dark color-scheme inside the embedded dark desktop studio preview even in White Liquid Glass mode */
+  color-scheme: dark;
   background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.04) 0%, #070709 74%);
   transition: background-color var(--dur-med) var(--ease);
 }
@@ -1661,7 +1655,7 @@ button.aether-swatch:hover {
 .card-edition-chip {
   padding: var(--s-2) var(--s-3);
   border-radius: var(--r-sm);
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: var(--tint-subtle);
   border: 1px solid var(--border-hairline);
   display: flex;
   flex-direction: column;
@@ -1700,7 +1694,7 @@ button.aether-swatch:hover {
 .edition-card {
   padding: var(--s-4);
   border-radius: var(--r-md);
-  background: rgba(10, 10, 12, 0.58);
+  background: var(--panel-inset-bg);
   border: 1px solid var(--border-hairline);
   box-shadow: var(--highlight-top);
   display: flex;
@@ -2146,9 +2140,9 @@ button.aether-swatch:hover {
 .site-footer {
   margin-top: auto;
   border-top: 1px solid var(--border-hairline);
-  background: linear-gradient(180deg, rgba(14, 14, 17, 0.5) 0%, var(--bg-deep) 100%);
+  background: var(--footer-bg);
   padding-top: var(--s-16);
-  padding-bottom: var(--s-12);
+  padding-bottom: var(--s-16);
 }
 
 .footer-statement {
@@ -2307,7 +2301,7 @@ dialog.ui-dialog[open]:where(:not([data-closing])) {
   }
 
   &::backdrop {
-    background-color: rgba(5, 5, 7, 0.72);
+    background-color: var(--backdrop-scrim);
     backdrop-filter: blur(12px);
 
     @starting-style {
@@ -2383,7 +2377,7 @@ dialog.ui-drawer--mobile {
   height: 36px;
   border-radius: var(--r-sm);
   border: 1px solid var(--border-hairline);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--tint-subtle);
   box-shadow: var(--highlight-top);
   color: var(--text-secondary);
   display: inline-flex;
@@ -2399,7 +2393,7 @@ dialog.ui-drawer--mobile {
 
 .dialog-close-btn:hover {
   color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--tint-active);
   border-color: var(--border-strong);
 }
 
@@ -2420,7 +2414,7 @@ dialog.ui-drawer--mobile {
 .dialog-footer {
   padding: var(--s-4) var(--s-6);
   border-top: 1px solid var(--border-hairline);
-  background-color: rgba(10, 10, 12, 0.48);
+  background-color: var(--dialog-footer-bg);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2557,7 +2551,7 @@ dialog.ui-drawer--mobile {
 .metric-card {
   padding: var(--s-4);
   border-radius: var(--r-md);
-  background: rgba(10, 10, 12, 0.56);
+  background: var(--panel-inset-bg);
   border: 1px solid var(--border-hairline);
   box-shadow: var(--highlight-top);
   display: flex;
@@ -2632,7 +2626,7 @@ dialog.ui-drawer--mobile {
   height: 22px;
   padding-inline: 6px;
   border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: var(--tint-hover);
   border: 1px solid var(--border-hairline);
   font-size: 11px;
   color: var(--text-secondary);
@@ -2659,7 +2653,7 @@ dialog.ui-drawer--mobile {
 .editor-tabs-bar {
   padding: var(--s-3) var(--s-6);
   border-bottom: 1px solid var(--border-hairline);
-  background-color: rgba(10, 10, 12, 0.42);
+  background-color: var(--dialog-footer-bg);
   flex-shrink: 0;
 }
 
@@ -2693,7 +2687,7 @@ dialog.ui-drawer--mobile {
   padding: 10px var(--s-3);
   border-radius: var(--r-sm);
   border: 1px solid var(--border-hairline);
-  background-color: rgba(10, 10, 12, 0.65);
+  background-color: var(--input-bg);
   color: var(--text-primary);
   font-size: 14px;
   transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
@@ -2720,7 +2714,7 @@ dialog.ui-drawer--mobile {
 .editor-item-card {
   padding: var(--s-4);
   border-radius: var(--r-md);
-  background: rgba(10, 10, 12, 0.56);
+  background: var(--panel-inset-bg);
   border: 1px solid var(--border-hairline);
   box-shadow: var(--highlight-top);
   display: flex;
@@ -2756,7 +2750,7 @@ dialog.ui-drawer--mobile {
   margin: 0;
   padding: var(--s-4);
   border-radius: var(--r-md);
-  background-color: rgba(7, 7, 9, 0.8);
+  background-color: var(--panel-inset-bg);
   border: 1px solid var(--border-hairline);
   font-family: ui-monospace, 'SF Mono', Consolas, monospace;
   font-size: 12px;
@@ -2844,7 +2838,284 @@ dialog.ui-drawer--mobile {
 }
 
 .mobile-nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: var(--tint-hover);
+}
+
+/* ==========================================================================
+   Interactive Roaming & Pettable Studio Cats
+   ========================================================================== */
+
+.cats-stage {
+  position: fixed;
+  inset: auto 0 0 0;
+  height: 76px;
+  z-index: 28;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.roaming-cat {
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  width: 64px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: grab;
+  will-change: transform;
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  border-radius: var(--r-sm);
+}
+
+.roaming-cat:active {
+  cursor: grabbing;
+}
+
+.cat-sprite-flip {
+  display: inline-flex;
+  transition: transform 240ms var(--ease);
+}
+
+.cat-sprite-flip.is-left {
+  transform: scaleX(-1);
+}
+
+.cat-svg {
+  overflow: visible;
+  transition: transform 280ms var(--spring);
+}
+
+.roaming-cat:hover .cat-svg {
+  transform: translateY(-2px);
+}
+
+.roaming-cat.is-petted .cat-svg {
+  transform: translateY(-3px) scale(1.06, 0.96);
+}
+
+/* Dark Cat (Нокс) — crisp charcoal with subtle rim so it reads on both Dark & White glass */
+.roaming-cat--dark .cat-body {
+  fill: #1b1c22;
+  stroke: rgba(255, 255, 255, 0.24);
+  stroke-width: 1;
+}
+
+.roaming-cat--dark .cat-leg,
+.roaming-cat--dark .cat-tail {
+  stroke: #1b1c22;
+}
+
+.roaming-cat--dark .cat-eye {
+  fill: #e8d5b2;
+}
+
+.roaming-cat--dark .cat-eye-happy {
+  stroke: #e8d5b2;
+  fill: none;
+}
+
+.roaming-cat--dark .cat-nose {
+  fill: #c9a97a;
+}
+
+/* Light Cat (Люмен) — warm porcelain/ivory with hairline ink outline so it reads on both Dark & White glass */
+.roaming-cat--light .cat-body {
+  fill: #efede8;
+  stroke: rgba(20, 22, 30, 0.26);
+  stroke-width: 1;
+}
+
+.roaming-cat--light .cat-leg,
+.roaming-cat--light .cat-tail {
+  stroke: #e4e1da;
+}
+
+.roaming-cat--light .cat-eye {
+  fill: #1b1c22;
+}
+
+.roaming-cat--light .cat-eye-happy {
+  stroke: #1b1c22;
+  fill: none;
+}
+
+.roaming-cat--light .cat-nose {
+  fill: #8c6836;
+}
+
+.cat-collar {
+  stroke: var(--accent);
+  fill: none;
+}
+
+.cat-tag {
+  fill: var(--accent);
+}
+
+.cat-shadow {
+  fill: light-dark(rgba(15, 18, 28, 0.14), rgba(0, 0, 0, 0.45));
+}
+
+.cat-tail {
+  transform-box: fill-box;
+  transform-origin: 90% 85%;
+  fill: none;
+}
+
+.cat-leg {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .roaming-cat .cat-tail {
+    animation: catTailSway 2.4s ease-in-out infinite alternate;
+  }
+
+  .roaming-cat.is-petted .cat-tail {
+    animation: catTailHappy 0.42s ease-in-out infinite alternate;
+  }
+
+  .cat-leg--a.is-walking {
+    animation: catStrideA 0.44s ease-in-out infinite alternate;
+  }
+
+  .cat-leg--b.is-walking {
+    animation: catStrideB 0.44s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes catTailSway {
+  from {
+    transform: rotate(-8deg);
+  }
+  to {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes catTailHappy {
+  from {
+    transform: rotate(-16deg);
+  }
+  to {
+    transform: rotate(18deg);
+  }
+}
+
+@keyframes catStrideA {
+  from {
+    transform: rotate(-14deg);
+  }
+  to {
+    transform: rotate(14deg);
+  }
+}
+
+@keyframes catStrideB {
+  from {
+    transform: rotate(14deg);
+  }
+  to {
+    transform: rotate(-14deg);
+  }
+}
+
+/* Petted Liquid Glass Purr Pill & Floating Minimal Hearts */
+.cat-purr-bubble {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cat-purr-pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--glass-popover-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--highlight-top), var(--glass-shadow-sm);
+  color: var(--text-primary);
+  font-size: 11px;
+  white-space: nowrap;
+  animation: catPurrPop 2.05s var(--ease) forwards;
+}
+
+.cat-heart {
+  position: absolute;
+  color: var(--accent);
+  bottom: 14px;
+}
+
+.cat-heart--1 {
+  left: -10px;
+  animation: catHeartFloat1 1.4s var(--ease) forwards;
+}
+
+.cat-heart--2 {
+  right: -8px;
+  animation: catHeartFloat2 1.6s var(--ease) 120ms forwards;
+  opacity: 0;
+}
+
+@keyframes catPurrPop {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.9);
+  }
+  16% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  82% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+}
+
+@keyframes catHeartFloat1 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 6px) scale(0.6);
+  }
+  25% {
+    opacity: 0.95;
+    transform: translate(-5px, -8px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-10px, -28px) scale(0.8);
+  }
+}
+
+@keyframes catHeartFloat2 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 4px) scale(0.6);
+  }
+  25% {
+    opacity: 0.85;
+    transform: translate(6px, -10px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(11px, -32px) scale(0.8);
+  }
 }
 
 /* ==========================================================================
@@ -2896,11 +3167,14 @@ dialog.ui-drawer--mobile {
 
   .header-nav,
   .editor-desktop-btn,
-  .atmosphere-trigger-label {
+  .atmosphere-trigger-label,
+  .theme-quick-label,
+  .sound-btn-label {
     display: none;
   }
 
-  .atmosphere-trigger {
+  .atmosphere-trigger,
+  .theme-quick-btn {
     width: 36px;
     padding: 0;
     justify-content: center;

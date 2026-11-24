@@ -1,4 +1,4 @@
-import { Check, Copy, Volume2, VolumeX } from 'lucide-react';
+import { Check, Copy, Moon, Sun, Volume2, VolumeX } from 'lucide-react';
 
 interface AnimatedCopyIconProps {
   copied: boolean;
@@ -31,6 +31,24 @@ export function AnimatedSoundIcon({ enabled, size = 16 }: AnimatedSoundIconProps
       </span>
       <span className="morph-icon-layer morph-icon-b">
         <VolumeX size={size} strokeWidth={1.5} />
+      </span>
+    </span>
+  );
+}
+
+interface AnimatedThemeIconProps {
+  isLight: boolean;
+  size?: number;
+}
+
+export function AnimatedThemeIcon({ isLight, size = 15 }: AnimatedThemeIconProps) {
+  return (
+    <span className={`morph-icon ${isLight ? 'is-swapped' : ''}`} aria-hidden="true">
+      <span className="morph-icon-layer morph-icon-a">
+        <Moon size={size} strokeWidth={1.5} />
+      </span>
+      <span className="morph-icon-layer morph-icon-b">
+        <Sun size={size} strokeWidth={1.5} />
       </span>
     </span>
   );

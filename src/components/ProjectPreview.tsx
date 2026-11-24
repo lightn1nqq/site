@@ -259,8 +259,8 @@ export function ProjectPreview({
                 <span className="aether-insp-v tabular">Авто 1–5</span>
               </div>
               <div className="aether-insp-row">
-                <span className="aether-insp-k">Лимит альбома</span>
-                <span className="aether-insp-v is-ok">В норме</span>
+                <span className="aether-insp-k">Бюджет штрихов</span>
+                <span className="aether-insp-v is-ok">Оптимально</span>
               </div>
               <div className="aether-insp-row">
                 <span className="aether-insp-k">Звук UI</span>
@@ -268,7 +268,7 @@ export function ProjectPreview({
               </div>
 
               <div className="aether-cta-bar">
-                <span className="aether-cta-pill">Начать рисование · F6</span>
+                <span className="aether-cta-pill">Запустить перенос · F6</span>
               </div>
             </div>
           </div>

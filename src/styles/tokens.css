@@ -1,19 +1,57 @@
 :root {
-  color-scheme: dark;
+  /* Follow system preference by default; mirror <meta name="color-scheme"> override */
+  color-scheme: light dark;
   /* Disable default root snapshot so View Transitions only animate targeted project cards */
   view-transition-name: none;
 
-  /* Obsidian & Dark Liquid Glass neutral ramp (strictly monochrome, zero neon tint) */
-  --bg-deep: #070709;
-  --bg-page: #0a0a0c;
-  --bg-card: rgba(20, 20, 24, 0.56);
-  --bg-card-solid: #141417;
-  --bg-raised: rgba(34, 34, 40, 0.62);
-  --bg-hover: rgba(46, 46, 54, 0.72);
+  /* Adaptive Obsidian Dark <-> Frosted White Liquid Glass core color ramp */
+  --bg-deep: light-dark(#e7e9ef, #070709);
+  --bg-page: light-dark(#f2f3f7, #0a0a0c);
+  --bg-card: light-dark(rgba(255, 255, 255, 0.66), rgba(20, 20, 24, 0.56));
+  --bg-card-solid: light-dark(#ffffff, #141417);
+  --bg-raised: light-dark(rgba(255, 255, 255, 0.82), rgba(34, 34, 40, 0.62));
+  --bg-hover: light-dark(rgba(255, 255, 255, 0.94), rgba(46, 46, 54, 0.72));
 
-  /* Smoked Liquid Glass optical parameters */
+  /* Three calibrated text roles (>= 4.8:1 contrast in both schemes) */
+  --text-primary: light-dark(#131419, #f2f2f4);
+  --text-secondary: light-dark(#484a55, #a4a4ac);
+  --text-muted: light-dark(#646775, #86868f);
+
+  /* Single world-derived accent (burnished bronze on light, brushed brass on dark) */
+  --accent: light-dark(#8c6836, #c9a97a);
+  --accent-dim: light-dark(rgba(140, 104, 54, 0.14), rgba(201, 169, 122, 0.16));
+
+  /* Semantic roles */
+  --positive: light-dark(#16884e, #4cc38a);
+  --negative: light-dark(#cf3237, #e5484d);
+
+  /* Optical hairlines */
+  --border-hairline: light-dark(rgba(18, 20, 28, 0.09), rgba(255, 255, 255, 0.09));
+  --border-strong: light-dark(rgba(18, 20, 28, 0.17), rgba(255, 255, 255, 0.16));
+  --border-subtle: light-dark(rgba(18, 20, 28, 0.06), rgba(255, 255, 255, 0.055));
+
+  /* Subtle interactive fills */
+  --tint-subtle: light-dark(rgba(18, 20, 28, 0.04), rgba(255, 255, 255, 0.045));
+  --tint-hover: light-dark(rgba(18, 20, 28, 0.065), rgba(255, 255, 255, 0.065));
+  --tint-active: light-dark(rgba(18, 20, 28, 0.09), rgba(255, 255, 255, 0.095));
+  --panel-inset-bg: light-dark(rgba(236, 238, 244, 0.72), rgba(10, 10, 12, 0.56));
+  --input-bg: light-dark(rgba(255, 255, 255, 0.8), rgba(10, 10, 12, 0.65));
+  --backdrop-scrim: light-dark(rgba(220, 224, 234, 0.58), rgba(5, 5, 7, 0.72));
+  --btn-primary-hover: light-dark(#242630, #e2e2e6);
+  --scrollbar-thumb: light-dark(rgba(18, 20, 28, 0.18), rgba(255, 255, 255, 0.14));
+  --scrollbar-thumb-hover: light-dark(rgba(18, 20, 28, 0.32), rgba(255, 255, 255, 0.24));
+
+  /* Dark Liquid Glass complex gradients & shadows (default for dark scheme) */
   --glass-blur: blur(22px) saturate(135%);
   --glass-blur-heavy: blur(32px) saturate(145%);
+  --page-ambient:
+    radial-gradient(ellipse 80% 48% at 50% -12%, rgba(255, 255, 255, 0.055) 0%, rgba(10, 10, 12, 0) 68%),
+    radial-gradient(ellipse 60% 36% at 85% 32%, rgba(255, 255, 255, 0.022) 0%, rgba(10, 10, 12, 0) 70%);
+  --header-bg: linear-gradient(
+    180deg,
+    rgba(16, 16, 20, 0.78) 0%,
+    rgba(12, 12, 15, 0.64) 100%
+  );
   --glass-surface-bg: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0.048) 0%,
@@ -37,28 +75,21 @@
     rgba(255, 255, 255, 0.06) 0%,
     rgba(255, 255, 255, 0.018) 100%
   ),
-  rgba(18, 18, 22, 0.82);
-
-  /* Crisp optical hairlines & top-edge specular refraction */
-  --border-hairline: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --border-subtle: rgba(255, 255, 255, 0.055);
+  rgba(18, 18, 22, 0.84);
+  --glass-pill-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.045) 100%
+  );
+  --glass-pill-border: rgba(255, 255, 255, 0.12);
+  --glass-pill-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 12px rgba(0, 0, 0, 0.24);
+  --specular-glint: rgba(255, 255, 255, 0.068);
   --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(255, 255, 255, 0.03);
   --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.44);
   --glass-shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.34);
-
-  /* Three calibrated text roles */
-  --text-primary: #f2f2f4;
-  --text-secondary: #a4a4ac;
-  --text-muted: #86868f;
-
-  /* Single world-derived accent (warm brushed brass from darkroom/hardware world) */
-  --accent: #c9a97a;
-  --accent-dim: rgba(201, 169, 122, 0.16);
-
-  /* Semantic roles */
-  --positive: #4cc38a;
-  --negative: #e5484d;
+  --footer-bg: linear-gradient(180deg, rgba(14, 14, 17, 0.5) 0%, #070709 100%);
+  --btn-primary-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 8px 20px rgba(0, 0, 0, 0.35);
+  --dialog-footer-bg: rgba(10, 10, 12, 0.48);
 
   /* Typography */
   --font-display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
@@ -79,7 +110,7 @@
   --s-24: 96px;
   --s-32: 128px;
 
-  /* Radius scale (nested math: inner = outer - padding, >= 4px) */
+  /* Radius scale */
   --r-xs: 6px;
   --r-sm: 8px;
   --r-md: 12px;
@@ -97,26 +128,129 @@
   --dur-med: 280ms;
   --dur-slow: 420ms;
 
-  /* Scroll-focus blur depth (tunable in Atmosphere menu) */
+  /* Scroll-focus blur depth (tunable in Settings menu) */
   --scroll-blur-max: 7px;
   --scroll-progress: 0;
 
   /* Layout container */
   --container-max: 1160px;
   --header-h: 64px;
+
+  &:has(> head > meta[name='color-scheme'][content='dark']) {
+    color-scheme: dark;
+  }
+
+  &:has(> head > meta[name='color-scheme'][content='light']) {
+    color-scheme: light;
+  }
 }
 
-/* Atmosphere density presets (toggled from the Liquid Glass settings popover) */
-:root[data-glass-density='dense'] {
-  --glass-blur: blur(14px) saturate(115%);
+/* ==========================================================================
+   White Liquid Glass Scheme (Explicit light override OR system light preference)
+   ========================================================================== */
+
+@media (prefers-color-scheme: light) {
+  :root:not(:has(> head > meta[name='color-scheme'][content='dark'])) {
+    --glass-blur: blur(22px) saturate(165%);
+    --glass-blur-heavy: blur(32px) saturate(175%);
+    --page-ambient:
+      radial-gradient(ellipse 84% 52% at 50% -10%, rgba(255, 255, 255, 0.96) 0%, rgba(242, 243, 247, 0) 68%),
+      radial-gradient(ellipse 58% 36% at 88% 36%, rgba(215, 220, 232, 0.45) 0%, rgba(242, 243, 247, 0) 72%);
+    --header-bg: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.82) 0%,
+      rgba(246, 247, 251, 0.68) 100%
+    );
+    --glass-surface-bg: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.84) 0%,
+      rgba(255, 255, 255, 0.58) 100%
+    );
+    --glass-surface-hover: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.94) 0%,
+      rgba(255, 255, 255, 0.72) 100%
+    );
+    --glass-dialog-bg: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(246, 247, 251, 0.84) 100%
+    );
+    --glass-popover-bg: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.94) 0%,
+      rgba(248, 249, 252, 0.88) 100%
+    );
+    --glass-pill-bg: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(255, 255, 255, 0.78) 100%
+    );
+    --glass-pill-border: rgba(18, 20, 28, 0.1);
+    --glass-pill-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 3px 10px rgba(15, 18, 28, 0.08);
+    --specular-glint: rgba(255, 255, 255, 0.78);
+    --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(18, 20, 28, 0.04);
+    --glass-shadow: 0 18px 44px rgba(15, 18, 28, 0.11), 0 2px 8px rgba(15, 18, 28, 0.04);
+    --glass-shadow-sm: 0 8px 24px rgba(15, 18, 28, 0.065), 0 1px 3px rgba(15, 18, 28, 0.03);
+    --footer-bg: linear-gradient(180deg, rgba(246, 247, 251, 0.6) 0%, #e7e9ef 100%);
+    --btn-primary-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 8px 20px rgba(15, 18, 28, 0.16);
+    --dialog-footer-bg: rgba(238, 240, 246, 0.72);
+  }
+}
+
+:root:has(> head > meta[name='color-scheme'][content='light']) {
+  --glass-blur: blur(22px) saturate(165%);
+  --glass-blur-heavy: blur(32px) saturate(175%);
+  --page-ambient:
+    radial-gradient(ellipse 84% 52% at 50% -10%, rgba(255, 255, 255, 0.96) 0%, rgba(242, 243, 247, 0) 68%),
+    radial-gradient(ellipse 58% 36% at 88% 36%, rgba(215, 220, 232, 0.45) 0%, rgba(242, 243, 247, 0) 72%);
+  --header-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.82) 0%,
+    rgba(246, 247, 251, 0.68) 100%
+  );
   --glass-surface-bg: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.032) 0%,
-    rgba(255, 255, 255, 0.008) 100%
-  ),
-  rgba(18, 18, 21, 0.84);
-  --glass-dialog-bg: rgba(17, 17, 20, 0.94);
-  --glass-popover-bg: rgba(19, 19, 23, 0.94);
+    rgba(255, 255, 255, 0.84) 0%,
+    rgba(255, 255, 255, 0.58) 100%
+  );
+  --glass-surface-hover: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(255, 255, 255, 0.72) 100%
+  );
+  --glass-dialog-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(246, 247, 251, 0.84) 100%
+  );
+  --glass-popover-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(248, 249, 252, 0.88) 100%
+  );
+  --glass-pill-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.96) 0%,
+    rgba(255, 255, 255, 0.78) 100%
+  );
+  --glass-pill-border: rgba(18, 20, 28, 0.1);
+  --glass-pill-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 3px 10px rgba(15, 18, 28, 0.08);
+  --specular-glint: rgba(255, 255, 255, 0.78);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(18, 20, 28, 0.04);
+  --glass-shadow: 0 18px 44px rgba(15, 18, 28, 0.11), 0 2px 8px rgba(15, 18, 28, 0.04);
+  --glass-shadow-sm: 0 8px 24px rgba(15, 18, 28, 0.065), 0 1px 3px rgba(15, 18, 28, 0.03);
+  --footer-bg: linear-gradient(180deg, rgba(246, 247, 251, 0.6) 0%, #e7e9ef 100%);
+  --btn-primary-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 8px 20px rgba(15, 18, 28, 0.16);
+  --dialog-footer-bg: rgba(238, 240, 246, 0.72);
+}
+
+/* Atmosphere density presets (toggled from Settings popover) */
+:root[data-glass-density='dense'] {
+  --glass-blur: blur(12px) saturate(115%);
+  --glass-surface-bg: light-dark(rgba(255, 255, 255, 0.94), rgba(18, 18, 21, 0.88));
+  --glass-dialog-bg: light-dark(rgba(255, 255, 255, 0.98), rgba(17, 17, 20, 0.95));
+  --glass-popover-bg: light-dark(rgba(255, 255, 255, 0.98), rgba(19, 19, 23, 0.95));
 }
 
 :root[data-scroll-blur='soft'] {
@@ -155,15 +289,13 @@ body {
   margin: 0;
   min-height: 100dvh;
   background-color: var(--bg-page);
-  /* Subtle architectural monochrome zenith light so Liquid Glass has real depth without any colored glow */
-  background-image:
-    radial-gradient(ellipse 80% 48% at 50% -12%, rgba(255, 255, 255, 0.055) 0%, rgba(10, 10, 12, 0) 68%),
-    radial-gradient(ellipse 60% 36% at 85% 32%, rgba(255, 255, 255, 0.022) 0%, rgba(10, 10, 12, 0) 70%);
+  background-image: var(--page-ambient);
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-weight: 400;
   overflow-x: clip;
+  transition: background-color var(--dur-med) var(--ease), color var(--dur-med) var(--ease);
 }
 
 img,
@@ -188,7 +320,7 @@ a {
   text-decoration: none;
 }
 
-/* Visible accessible focus ring (>= 8:1 contrast on obsidian) */
+/* Visible accessible focus ring */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
@@ -210,7 +342,7 @@ a {
   border: 0;
 }
 
-/* Custom subtle dark scrollbars */
+/* Custom subtle scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -219,11 +351,11 @@ a {
   background: var(--bg-deep);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.14);
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.24);
+  background: var(--scrollbar-thumb-hover);
 }
 
 /* ==========================================================================
@@ -274,7 +406,6 @@ a {
    ========================================================================== */
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Native CSS Scroll-Driven View Timeline (zero JS overhead, esbuild-clean from/to keyframes) */
   @supports ((animation-timeline: view()) and (animation-range: entry)) {
     @keyframes scroll-focus-enter {
       from {
@@ -311,7 +442,6 @@ a {
       will-change: opacity, transform, filter;
     }
 
-    /* Subtle stagger cascade via shifted view-timeline insets */
     :root:not([data-scroll-blur='off']) [data-scroll-focus='stagger-1'] {
       animation-timeline: view(block 2% 2%);
     }
@@ -328,7 +458,6 @@ a {
       animation-timeline: view(block 16% 2%);
     }
 
-    /* Footer variant: reaches 100% sharp earlier since it sits at bottom of document */
     :root:not([data-scroll-blur='off']) [data-scroll-focus='footer'] {
       animation: scroll-focus-enter auto linear backwards;
       animation-timeline: view(block 0% 0%);
@@ -336,7 +465,6 @@ a {
     }
   }
 
-  /* Fallback interpolation driven by useScrollFocusFallback when view() is unsupported */
   @supports not ((animation-timeline: view()) and (animation-range: entry)) {
     :root:not([data-scroll-blur='off']) [data-scroll-focus] {
       opacity: var(--sf-opacity, 1);
@@ -359,13 +487,13 @@ a {
   height: 2px;
   z-index: 50;
   pointer-events: none;
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: var(--tint-subtle);
 }
 
 .scroll-progress-fill {
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.25) 0%, var(--accent) 100%);
+  background: linear-gradient(90deg, var(--text-muted) 0%, var(--accent) 100%);
   transform-origin: 0 50%;
   transform: scaleX(var(--scroll-progress, 0));
 }
