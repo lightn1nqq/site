@@ -11,6 +11,7 @@ import type { PortfolioData, ProjectItem } from './data/portfolio';
 import {
   clearPortfolioData,
   hasCustomPortfolioData,
+  isLocalEditorAllowed,
   loadPortfolioData,
   savePortfolioData,
 } from './lib/storage';
@@ -93,8 +94,11 @@ function applyThemeToDocument(pref: ThemePreference): void {
 }
 
 export function App() {
+  const canUseEditor = useMemo(() => isLocalEditorAllowed(), []);
   const [data, setData] = useState<PortfolioData>(() => loadPortfolioData());
-  const [isCustomized, setIsCustomized] = useState<boolean>(() => hasCustomPortfolioData());
+  const [isCustomized, setIsCustomized] = useState<boolean>(
+    () => canUseEditor && hasCustomPortfolioData(),
+  );
   const [selectedCategory, setSelectedCategory] = useState<string>(ALL_CATEGORY);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [navDirection, setNavDirection] = useState<'next' | 'prev' | 'none'>('none');
@@ -487,19 +491,21 @@ export function App() {
               <span className="sound-dot" aria-hidden="true" />
             </button>
 
-            <button
-              type="button"
-              className="icon-control glass-control editor-desktop-btn"
-              onClick={() => {
-                sound.playClick();
-                setEditorOpen(true);
-              }}
-              onMouseEnter={() => sound.playHover()}
-              aria-label="Открыть локальный редактор проектов и ссылок"
-            >
-              <SlidersHorizontal size={16} strokeWidth={1.5} aria-hidden="true" />
-              <span>Редактор</span>
-            </button>
+            {canUseEditor && (
+              <button
+                type="button"
+                className="icon-control glass-control editor-desktop-btn"
+                onClick={() => {
+                  sound.playClick();
+                  setEditorOpen(true);
+                }}
+                onMouseEnter={() => sound.playHover()}
+                aria-label="Открыть локальный редактор проектов и ссылок"
+              >
+                <SlidersHorizontal size={16} strokeWidth={1.5} aria-hidden="true" />
+                <span>Редактор</span>
+              </button>
+            )}
 
             <button
               type="button"
@@ -980,18 +986,21 @@ export function App() {
         onNotify={showToast}
       />
 
-      <EditorDrawer
-        open={editorOpen}
-        data={data}
-        isCustomized={isCustomized}
-        onChange={handleDataChange}
-        onReset={handleResetData}
-        onClose={() => setEditorOpen(false)}
-        onNotify={showToast}
-      />
+      {canUseEditor && (
+        <EditorDrawer
+          open={editorOpen}
+          data={data}
+          isCustomized={isCustomized}
+          onChange={handleDataChange}
+          onReset={handleResetData}
+          onClose={() => setEditorOpen(false)}
+          onNotify={showToast}
+        />
+      )}
 
       <MobileNavDialog
         open={mobileMenuOpen}
+        canUseEditor={canUseEditor}
         isLightTheme={isLightResolved}
         soundEnabled={soundEnabled}
         catsEnabled={catsEnabled}

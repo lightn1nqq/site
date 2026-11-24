@@ -2,8 +2,19 @@ import { PORTFOLIO_DATA, type PortfolioData } from '../data/portfolio';
 
 const DATA_STORAGE_KEY = 'portfolio_custom_data_v6';
 
+/**
+ * Локальный редактор и чтение правок из localStorage доступны только на локальной машине
+ * (dev-режим, localhost или 127.0.0.1). На опубликованном сайте редактор полностью отключён.
+ */
+export function isLocalEditorAllowed(): boolean {
+  if (import.meta.env.DEV) return true;
+  if (typeof window === 'undefined') return false;
+  const host = window.location.hostname;
+  return host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
+}
+
 export function loadPortfolioData(): PortfolioData {
-  if (typeof window === 'undefined') return PORTFOLIO_DATA;
+  if (typeof window === 'undefined' || !isLocalEditorAllowed()) return PORTFOLIO_DATA;
   try {
     const raw = window.localStorage.getItem(DATA_STORAGE_KEY);
     if (!raw) return PORTFOLIO_DATA;

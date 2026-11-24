@@ -8,6 +8,7 @@ import { AnimatedSoundIcon, AnimatedThemeIcon } from './AnimatedCopyIcon';
 
 interface MobileNavDialogProps {
   open: boolean;
+  canUseEditor: boolean;
   isLightTheme: boolean;
   soundEnabled: boolean;
   catsEnabled: boolean;
@@ -22,6 +23,7 @@ interface MobileNavDialogProps {
 
 export function MobileNavDialog({
   open,
+  canUseEditor,
   isLightTheme,
   soundEnabled,
   catsEnabled,
@@ -139,18 +141,20 @@ export function MobileNavDialog({
             <span>Контакты и сети</span>
             <ArrowUpRight size={16} strokeWidth={1.5} className="card-arrow-ne" aria-hidden="true" />
           </a>
-          <button
-            type="button"
-            className="mobile-nav-item"
-            onClick={() => {
-              sound.playClick();
-              closeMenu();
-              onOpenEditor();
-            }}
-          >
-            <span>Редактор контента</span>
-            <SlidersHorizontal size={16} strokeWidth={1.5} aria-hidden="true" />
-          </button>
+          {canUseEditor && (
+            <button
+              type="button"
+              className="mobile-nav-item"
+              onClick={() => {
+                sound.playClick();
+                closeMenu();
+                onOpenEditor();
+              }}
+            >
+              <span>Редактор контента</span>
+              <SlidersHorizontal size={16} strokeWidth={1.5} aria-hidden="true" />
+            </button>
+          )}
           <button type="button" className="mobile-nav-item" onClick={onToggleTheme}>
             <span>Тема ({isLightTheme ? 'светлая' : 'тёмная'})</span>
             <AnimatedThemeIcon isLight={isLightTheme} size={16} />
