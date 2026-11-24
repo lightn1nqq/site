@@ -1,0 +1,390 @@
+:root {
+  color-scheme: dark;
+  /* Disable default root snapshot so View Transitions only animate targeted project cards */
+  view-transition-name: none;
+
+  /* Obsidian & Dark Liquid Glass neutral ramp (strictly monochrome, zero neon tint) */
+  --bg-deep: #070709;
+  --bg-page: #0a0a0c;
+  --bg-card: rgba(20, 20, 24, 0.56);
+  --bg-card-solid: #141417;
+  --bg-raised: rgba(34, 34, 40, 0.62);
+  --bg-hover: rgba(46, 46, 54, 0.72);
+
+  /* Smoked Liquid Glass optical parameters */
+  --glass-blur: blur(22px) saturate(135%);
+  --glass-blur-heavy: blur(32px) saturate(145%);
+  --glass-surface-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.048) 0%,
+    rgba(255, 255, 255, 0.014) 100%
+  ),
+  rgba(18, 18, 22, 0.56);
+  --glass-surface-hover: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.068) 0%,
+    rgba(255, 255, 255, 0.022) 100%
+  ),
+  rgba(24, 24, 29, 0.64);
+  --glass-dialog-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.055) 0%,
+    rgba(255, 255, 255, 0.015) 100%
+  ),
+  rgba(16, 16, 20, 0.78);
+  --glass-popover-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.018) 100%
+  ),
+  rgba(18, 18, 22, 0.82);
+
+  /* Crisp optical hairlines & top-edge specular refraction */
+  --border-hairline: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-subtle: rgba(255, 255, 255, 0.055);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+  --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.44);
+  --glass-shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.34);
+
+  /* Three calibrated text roles */
+  --text-primary: #f2f2f4;
+  --text-secondary: #a4a4ac;
+  --text-muted: #86868f;
+
+  /* Single world-derived accent (warm brushed brass from darkroom/hardware world) */
+  --accent: #c9a97a;
+  --accent-dim: rgba(201, 169, 122, 0.16);
+
+  /* Semantic roles */
+  --positive: #4cc38a;
+  --negative: #e5484d;
+
+  /* Typography */
+  --font-display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Strict 4px spacing scale */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-20: 80px;
+  --s-24: 96px;
+  --s-32: 128px;
+
+  /* Radius scale (nested math: inner = outer - padding, >= 4px) */
+  --r-xs: 6px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 20px;
+
+  /* Motion: calibrated deceleration + subtle damped optical spring (transform only) */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring: linear(
+    0, 0.011 1.2%, 0.044 2.5%, 0.168 5.4%, 0.562 12.8%, 0.779 18%,
+    0.922 23.4%, 0.996 28.8%, 1.02 33.8%, 1.022 38.6%, 1.013 46%,
+    1.003 56%, 0.999 68%, 1 84%, 1
+  );
+  --dur-fast: 160ms;
+  --dur-med: 280ms;
+  --dur-slow: 420ms;
+
+  /* Scroll-focus blur depth (tunable in Atmosphere menu) */
+  --scroll-blur-max: 7px;
+  --scroll-progress: 0;
+
+  /* Layout container */
+  --container-max: 1160px;
+  --header-h: 64px;
+}
+
+/* Atmosphere density presets (toggled from the Liquid Glass settings popover) */
+:root[data-glass-density='dense'] {
+  --glass-blur: blur(14px) saturate(115%);
+  --glass-surface-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.032) 0%,
+    rgba(255, 255, 255, 0.008) 100%
+  ),
+  rgba(18, 18, 21, 0.84);
+  --glass-dialog-bg: rgba(17, 17, 20, 0.94);
+  --glass-popover-bg: rgba(19, 19, 23, 0.94);
+}
+
+:root[data-scroll-blur='soft'] {
+  --scroll-blur-max: 3px;
+}
+
+:root[data-scroll-blur='off'] {
+  --scroll-blur-max: 0px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background-color: var(--bg-page);
+  /* Subtle architectural monochrome zenith light so Liquid Glass has real depth without any colored glow */
+  background-image:
+    radial-gradient(ellipse 80% 48% at 50% -12%, rgba(255, 255, 255, 0.055) 0%, rgba(10, 10, 12, 0) 68%),
+    radial-gradient(ellipse 60% 36% at 85% 32%, rgba(255, 255, 255, 0.022) 0%, rgba(10, 10, 12, 0) 70%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  overflow-x: clip;
+}
+
+img,
+svg {
+  display: block;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Visible accessible focus ring (>= 8:1 contrast on obsidian) */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Custom subtle dark scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+/* ==========================================================================
+   View Transitions API (Project Cards Group Rearrange / Filter)
+   ========================================================================== */
+
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(.project-card) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-new(.project-card):only-child {
+  animation: vt-card-in 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+::view-transition-old(.project-card):only-child {
+  animation: vt-card-out 240ms ease-in both;
+}
+
+@keyframes vt-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+}
+
+@keyframes vt-card-out {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   Bidirectional Scroll-Driven Text Focus (blur -> sharp -> blur, down & up)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Native CSS Scroll-Driven View Timeline (zero JS overhead, esbuild-clean from/to keyframes) */
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes scroll-focus-enter {
+      from {
+        opacity: 0.06;
+        transform: translate3d(0, 22px, 0);
+        filter: blur(var(--scroll-blur-max));
+      }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+        filter: blur(0px);
+      }
+    }
+
+    @keyframes scroll-focus-exit {
+      from {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+        filter: blur(0px);
+      }
+      to {
+        opacity: 0.06;
+        transform: translate3d(0, -16px, 0);
+        filter: blur(var(--scroll-blur-max));
+      }
+    }
+
+    :root:not([data-scroll-blur='off']) [data-scroll-focus] {
+      animation:
+        scroll-focus-enter auto linear backwards,
+        scroll-focus-exit auto linear forwards;
+      animation-timeline: view(block 4% 2%);
+      animation-range: entry 0% entry 72%, exit 26% exit 100%;
+      will-change: opacity, transform, filter;
+    }
+
+    /* Subtle stagger cascade via shifted view-timeline insets */
+    :root:not([data-scroll-blur='off']) [data-scroll-focus='stagger-1'] {
+      animation-timeline: view(block 2% 2%);
+    }
+
+    :root:not([data-scroll-blur='off']) [data-scroll-focus='stagger-2'] {
+      animation-timeline: view(block 7% 2%);
+    }
+
+    :root:not([data-scroll-blur='off']) [data-scroll-focus='stagger-3'] {
+      animation-timeline: view(block 12% 2%);
+    }
+
+    :root:not([data-scroll-blur='off']) [data-scroll-focus='stagger-4'] {
+      animation-timeline: view(block 16% 2%);
+    }
+
+    /* Footer variant: reaches 100% sharp earlier since it sits at bottom of document */
+    :root:not([data-scroll-blur='off']) [data-scroll-focus='footer'] {
+      animation: scroll-focus-enter auto linear backwards;
+      animation-timeline: view(block 0% 0%);
+      animation-range: entry 0% entry 52%;
+    }
+  }
+
+  /* Fallback interpolation driven by useScrollFocusFallback when view() is unsupported */
+  @supports not ((animation-timeline: view()) and (animation-range: entry)) {
+    :root:not([data-scroll-blur='off']) [data-scroll-focus] {
+      opacity: var(--sf-opacity, 1);
+      transform: translate3d(0, var(--sf-y, 0px), 0);
+      filter: blur(var(--sf-blur, 0px));
+      will-change: opacity, transform, filter;
+    }
+  }
+}
+
+/* ==========================================================================
+   Top Optical Scroll-Progress Thread (Native CSS scroll() + JS fallback)
+   ========================================================================== */
+
+.scroll-progress-thread {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 50;
+  pointer-events: none;
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.scroll-progress-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.25) 0%, var(--accent) 100%);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--scroll-progress, 0));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    @keyframes grow-scroll-thread {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    .scroll-progress-fill {
+      transform: none;
+      animation: grow-scroll-thread auto linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+}
