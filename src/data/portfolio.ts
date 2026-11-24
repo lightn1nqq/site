@@ -112,9 +112,9 @@ export const PORTFOLIO_DATA: PortfolioData = {
     {
       id: 'github',
       label: 'GitHub',
-      handle: 'github.com/lightnng32-ui',
-      url: 'https://github.com/lightnng32-ui',
-      copyValue: 'https://github.com/lightnng32-ui',
+      handle: 'github.com/lightn1nqq',
+      url: 'https://github.com/lightn1nqq',
+      copyValue: 'https://github.com/lightn1nqq',
       icon: 'github',
     },
     {
@@ -207,7 +207,7 @@ export const PORTFOLIO_DATA: PortfolioData = {
         { keys: 'Ctrl + V', action: 'Вставить картинку из буфера' },
         { keys: 'F1', action: 'Памятка клавиш и режима 1:1' },
       ],
-      repoUrl: 'https://github.com/lightnng32-ui',
+      repoUrl: 'https://github.com/lightn1nqq',
       featured: true,
     },
   ],
